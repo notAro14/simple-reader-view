@@ -2,11 +2,18 @@
 import { useFormState } from "react-dom";
 import { getReaderView } from "@/app/actions/getReaderView";
 import { SubmitButton } from "@/app/components/SubtmiButton";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 const initialState = { status: "idle" } as const;
 
 export function GetReaderViewForm() {
   const [state, action] = useFormState(getReaderView, initialState);
+  const { copy, copied } = useCopyToClipboard();
+  useEffect(() => {
+    copied && toast.success("Prompt copied");
+  }, [copied]);
   return (
     <>
       <form className="flex flex-col gap-4" action={action}>
@@ -18,12 +25,21 @@ export function GetReaderViewForm() {
           <input id="url" name="url" type="url" required className="grow" />
         </label>
         <SubmitButton>Simplify</SubmitButton>
+        {state.status === "fulfilled" && state.data.prompt.length && (
+          <button
+            type="button"
+            className="btn btn-outline w-full"
+            onClick={() => copy(state.data.prompt)}
+          >
+            Copy prompt for summary
+          </button>
+        )}
       </form>
-      {state.status === "fulfilled" && state.data.length ? (
-        <article dangerouslySetInnerHTML={{ __html: state.data }} />
+      {state.status === "fulfilled" && state.data.html.length ? (
+        <article dangerouslySetInnerHTML={{ __html: state.data.html }} />
       ) : null}
       {state.status === "rejected" ||
-        (state.status === "fulfilled" && state.data.length === 0 && (
+        (state.status === "fulfilled" && state.data.html.length === 0 && (
           <div role="alert" className="alert alert-error mt-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
