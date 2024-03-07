@@ -25,18 +25,40 @@ export function GetReaderViewForm() {
           <input id="url" name="url" type="url" required className="grow" />
         </label>
         <SubmitButton>Simplify</SubmitButton>
-        {state.status === "fulfilled" && state.data.prompt.length && (
+      </form>
+      {state.status === "fulfilled" && state.data.prompt.length && (
+        <>
+          <h2>Summary prompt</h2>
+          <label className="form-control mt-4">
+            <div className="label">
+              <span className="label-text">
+                Copy and paste this prompt in your favorite AI chat to get a
+                summary of the blog post. Feel free to edit it to your liking.
+              </span>
+            </div>
+            <textarea
+              className="textarea textarea-bordered textarea-md textarea-success"
+              defaultValue={state.data.prompt}
+              rows={10}
+            ></textarea>
+          </label>
           <button
             type="button"
-            className="btn btn-outline w-full"
+            className="btn btn-outline w-full mt-4"
             onClick={() => copy(state.data.prompt)}
           >
             Copy prompt for summary
           </button>
-        )}
-      </form>
+        </>
+      )}
       {state.status === "fulfilled" && state.data.html.length ? (
-        <article dangerouslySetInnerHTML={{ __html: state.data.html }} />
+        <>
+          <h2>Article content</h2>
+          <article
+            className="mt-10"
+            dangerouslySetInnerHTML={{ __html: state.data.html }}
+          />
+        </>
       ) : null}
       {state.status === "rejected" ||
         (state.status === "fulfilled" && state.data.html.length === 0 && (

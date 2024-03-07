@@ -1,13 +1,25 @@
 "use server";
 import { Readability } from "@mozilla/readability";
 import { JSDOM } from "jsdom";
-import DOMPurify from "dompurify";
+import { sanitise } from "@/sanitise";
 
-function sanitize(html: string) {
-  const jsDom = new JSDOM("");
-  const purify = DOMPurify(jsDom.window);
-  return purify.sanitize(html);
-}
+const PROMPT = `
+# Instructions
+Can you provide a comprehensive summary of the given text?
+The summary should cover all the key points and main ideas presented in the original text, while also condensing the information into a concise and easy-to-understand format.
+Please ensure that the summary includes relevant details and examples that support the main ideas, while avoiding any unnecessary information or repetition.
+The length of the summary should be roughly 1/3 of the original text or 50-100 words.
+Use the text metadata to help you write the summary. Write the summary in the same language as the original text.
+
+# Text metadata
+Title : {{title}}
+Sitename : {{sitename}}
+Excerpt : {{excerpt}}
+Lang : {{lang}}
+
+# Text
+{{content}}
+`;
 
 export async function getReaderView(
   prevState: any,
@@ -48,26 +60,22 @@ export async function getReaderView(
     const reader = new Readability(doc);
     const article = reader.parse();
 
-    const content = sanitize(article?.content ?? "");
+    const content = sanitise(article?.content ?? "");
     const text = (article?.textContent ?? "").trim();
     const lang = article?.lang;
     const title = article?.title;
     const sitename = article?.siteName;
     const excerpt = article?.excerpt;
+    const prompt = PROMPT.replace("{{title}}", title || "Unknown")
+      .replace("{{sitename}}", sitename || "Unknown")
+      .replace("{{excerpt}}", excerpt || "Unknown")
+      .replace("{{lang}}", lang || "Unknown")
+      .replace("{{content}}", text)
+      .trim();
     const data = {
       html: content,
       text,
-      prompt:
-        text.length > 50
-          ? `Summarize the text delimited by triple quotes in 3 key points of roughly 15 words each.\nGive 1 actionable insight from the text.\n${
-              sitename && `The text is from a site named ${sitename}`
-            }.\n${title && `The text title is ${title}`}.\n${
-              excerpt &&
-              `The text excerpt provided by the site owner is "${excerpt}"`
-            }.\n${
-              lang && `The text language code is "${lang}"`
-            }.\nIf I did not give you the language to use, detect the text's language and output the summary in the language detected.\nIf you can't detect the language, output the summary in english. Here is the text\n\n"""${text}"""`
-          : "",
+      prompt,
     };
 
     return { status: "fulfilled", data };
