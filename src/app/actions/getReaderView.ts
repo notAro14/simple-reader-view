@@ -2,14 +2,15 @@
 import { Readability } from "@mozilla/readability";
 import { JSDOM } from "jsdom";
 import { sanitise } from "@/sanitise";
+import { cleanText } from "@/cleanText";
 
 const PROMPT = `
 # Instructions
 Can you provide a comprehensive summary of the given text?
 The summary should cover all the key points and main ideas presented in the original text, while also condensing the information into a concise and easy-to-understand format.
-Please ensure that the summary includes relevant details and examples that support the main ideas, while avoiding any unnecessary information or repetition.
+Please remove all unnecessary details like analogies or metaphors and focus on the most important insights.
 The length of the summary should be roughly 1/3 of the original text or 50-100 words. Use a friendly and engaging tone to make the summary interesting and enjoyable to read.
-Write the summary in short paragraphs with a short title each.
+Write the summary in short paragraphs of 8 to 15 words with a short title for each paragraphs. Make sure to group related ideas together in the same paragraph.
 
 Use the text metadata to help you write the summary. Write the summary in the same language as the original text.
 
@@ -72,7 +73,7 @@ export async function getReaderView(
       .replace("{{sitename}}", sitename || "Unknown")
       .replace("{{excerpt}}", excerpt || "Unknown")
       .replace("{{lang}}", lang || "Unknown")
-      .replace("{{content}}", text)
+      .replace("{{content}}", cleanText(text))
       .trim();
     const data = {
       html: content,
