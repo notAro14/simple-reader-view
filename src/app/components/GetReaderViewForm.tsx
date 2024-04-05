@@ -21,19 +21,25 @@ export function GetReaderViewForm() {
           htmlFor="url"
           className="input input-bordered flex items-center gap-2"
         >
-          Website
+          URL
           <input id="url" name="url" type="url" required className="grow" />
         </label>
         <SubmitButton>Simplify</SubmitButton>
       </form>
       {state.status === "fulfilled" && state.data.prompt.length && (
         <>
-          <h2>Summary prompt</h2>
+          <button
+            type="button"
+            className="btn btn-outline w-full mt-4"
+            onClick={() => copy(state.data.prompt)}
+          >
+            Copy summary prompt
+          </button>
           <label className="form-control mt-4">
             <div className="label">
               <span className="label-text">
                 Copy and paste this prompt in your favorite AI chat to get a
-                summary of the blog post. Feel free to edit it to your liking.
+                summary.
               </span>
             </div>
             <textarea
@@ -43,18 +49,11 @@ export function GetReaderViewForm() {
               rows={10}
             ></textarea>
           </label>
-          <button
-            type="button"
-            className="btn btn-outline w-full mt-4"
-            onClick={() => copy(state.data.prompt)}
-          >
-            Copy prompt for summary
-          </button>
         </>
       )}
       {state.status === "fulfilled" && state.data.html.length ? (
         <>
-          <h2>Article content</h2>
+          <h2>Page content</h2>
           <article
             className="mt-10"
             dangerouslySetInnerHTML={{ __html: state.data.html }}
