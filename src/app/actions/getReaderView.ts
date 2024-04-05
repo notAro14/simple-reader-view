@@ -8,7 +8,9 @@ const PROMPT = `
 Can you provide a comprehensive summary of the given text?
 The summary should cover all the key points and main ideas presented in the original text, while also condensing the information into a concise and easy-to-understand format.
 Please ensure that the summary includes relevant details and examples that support the main ideas, while avoiding any unnecessary information or repetition.
-The length of the summary should be roughly 1/3 of the original text or 50-100 words.
+The length of the summary should be roughly 1/3 of the original text or 50-100 words. Use a friendly and engaging tone to make the summary interesting and enjoyable to read.
+Write the summary in short paragraphs with a short title each.
+
 Use the text metadata to help you write the summary. Write the summary in the same language as the original text.
 
 # Text metadata
