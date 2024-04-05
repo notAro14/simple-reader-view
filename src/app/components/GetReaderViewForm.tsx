@@ -38,7 +38,8 @@ export function GetReaderViewForm() {
             </div>
             <textarea
               className="textarea textarea-bordered textarea-md textarea-success"
-              defaultValue={state.data.prompt}
+              value={state.data.prompt}
+              readOnly
               rows={10}
             ></textarea>
           </label>
