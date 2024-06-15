@@ -1,4 +1,4 @@
-import { GetReaderViewForm } from "@/app/components/GetReaderViewForm";
+import { GetReaderViewForm } from "src/components/GetReaderViewForm";
 
 export default function Page() {
   return (

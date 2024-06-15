@@ -1,8 +1,8 @@
 "use server";
 import { Readability } from "@mozilla/readability";
 import { JSDOM } from "jsdom";
-import { sanitise } from "@/sanitise";
-import { cleanText } from "@/cleanText";
+import { sanitise } from "src/sanitise";
+import { cleanText } from "src/cleanText";
 
 const PROMPT = `
 # Instructions

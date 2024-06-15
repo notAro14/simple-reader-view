@@ -1,10 +1,11 @@
 "use client";
-import { useFormState } from "react-dom";
-import { getReaderView } from "@/app/actions/getReaderView";
-import { SubmitButton } from "@/app/components/SubtmiButton";
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { useEffect } from "react";
+import { useFormState } from "react-dom";
 import toast from "react-hot-toast";
+
+import { getReaderView } from "src/actions/getReaderView";
+import { SubmitButton } from "src/components/SubtmiButton";
+import { useCopyToClipboard } from "src/hooks/useCopyToClipboard";
 
 const initialState = { status: "idle" } as const;
 
