@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Container } from "@radix-ui/themes";
+
 import { Provider } from "src/components/Provider";
+
+import "@radix-ui/themes/styles.css";
 import "src/styles/globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
-  title: "Simple Reader View",
-  description: "Enter a URL to get a simplified view of a page's content",
+  title: "TLDRify",
+  description:
+    "Summarise any web page content. Paste the page URL and get a TLDR summary",
 };
 
 export default function RootLayout({
@@ -16,9 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="lofi">
-      <body className={inter.className}>
-        <Provider>{children}</Provider>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <Provider>
+          <Container size="1" p="4">
+            {children}
+          </Container>
+        </Provider>
       </body>
     </html>
   );

@@ -6,6 +6,7 @@ import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 
 import { envServer } from "src/env/server";
+import { getPageContent } from "src/lib/getPageContent";
 
 const TEMPLATE = `You are a world class commentator. Provide a summary of the text given by user according the followings rules:
 - it should not include analogies or metaphors
@@ -18,6 +19,7 @@ const TEMPLATE = `You are a world class commentator. Provide a summary of the te
 `;
 
 const apiKey = envServer.OPENAI_API_KEY;
+
 const chatModel = new ChatOpenAI({
   apiKey,
 });
@@ -28,11 +30,15 @@ const prompt = ChatPromptTemplate.fromMessages([
 const outputParser = new StringOutputParser();
 const llmChain = prompt.pipe(chatModel).pipe(outputParser);
 
-export async function summarise(input: string) {
+export async function summarise(url: string) {
   "use server";
+  const res = await getPageContent(url);
+  if (res.status === "rejected")
+    return { ok: false, error: res.error, data: null } as const;
 
   const stream = createStreamableValue("");
 
+  const input = res.data.text;
   (async () => {
     const textStream = await llmChain.stream({ input });
 
@@ -43,5 +49,5 @@ export async function summarise(input: string) {
     stream.done();
   })();
 
-  return { output: stream.value };
+  return { ok: true, data: stream.value, error: null } as const;
 }

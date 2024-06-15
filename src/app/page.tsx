@@ -1,13 +1,15 @@
-import { GetReaderViewForm } from "src/components/GetReaderViewForm";
+import { Heading } from "@radix-ui/themes";
+import { Link } from "lucide-react";
+import { Summarise } from "src/components/Summarise";
 
 export default function Page() {
   return (
-    <main className="p-10 prose mx-auto">
-      <h1>Super Simple Summary</h1>
-      <p>
-        Summarise any web page content. Just paste the URL 🔗 and get a summary
-      </p>
-      <GetReaderViewForm />
+    <main className="flex flex-col gap-4">
+      <Heading as="h1" className="flex items-center gap-2">
+        <Link size="1em" />
+        TLDRify
+      </Heading>
+      <Summarise />
     </main>
   );
 }
